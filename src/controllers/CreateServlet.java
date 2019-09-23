@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import models.Message;
 import utils.DBUtil;
 
-
+//create（挿入処理）の作成
 /**
  * Servlet implementation class CreateServlet
  */
@@ -38,6 +38,7 @@ public class CreateServlet extends HttpServlet {
         //CSRF対策 値が無し、又はセッションIDと値が異なる場合はじく。
         if(_token != null && _token.equals(request.getSession().getId())) {
 
+            //EntityManagerの作成 Entityは箱。
             EntityManager em = DBUtil.createEntityManager();
 
             Message m = new Message();
