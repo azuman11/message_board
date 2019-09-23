@@ -7,7 +7,7 @@
         <%-- app.jspの${param.content}になる --%>
         <h2>メッセージ新規作成ページ</h2>
 
-        <form method="POST" action="{pageContext.request.contextPath}/create">
+        <form method="POST" action="${pageContext.request.contextPath}/create">
             <%--${p.r.contextPath} /message_board というコンテキストパスの文字列に置き換えて、create --%>
             <c:import url="_form.jsp" />
         </form>
