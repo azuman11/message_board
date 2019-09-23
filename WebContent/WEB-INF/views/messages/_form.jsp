@@ -5,6 +5,7 @@
 <label for="title">タイトル</label><br />
 <input type="text" name="title" value="${message.title}" />
 <%-- value="${message.title}"はリクエストスコープ(controller)でセットされたmessageから参照 --%>
+<%--valueに中身が入っている場合は、既に入ってる状態で表示される --%>
 <br /><br />
 
 <label for="content">メッセージ</label><br />
