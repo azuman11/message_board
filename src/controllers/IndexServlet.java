@@ -54,6 +54,12 @@ public class IndexServlet extends HttpServlet {
         //modelsのmessagesをリクエストスコープ(controller)にセット。
         //models messageに"message"クラスがあり、それを引っ張て来てjps(view)に渡す。
         request.setAttribute("messages", messages);
+        
+        //セッションにフラッシュがあったら、フラをセッションからリクエストに移動し、セッションからは削除。
+        if(request.getSession().getAttribute("flush") != null) {
+            request.setAttribute("flush", request.getSession().getAttribute("flush"));
+            request.getSession().removeAttribute("flush");
+        }
 
         //ビューとなるJSPを呼び出している。
         RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/messages/index.jsp");

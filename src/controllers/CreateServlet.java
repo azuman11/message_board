@@ -62,6 +62,8 @@ public class CreateServlet extends HttpServlet {
             em.persist(m);
             //commit 登録
             em.getTransaction().commit();
+            //リダイレクト時に消えてしまうので、フラッシュメッセージをセッションスコープに保存し、index.jspを呼出時にセッションスコープ表示
+            request.getSession().setAttribute("flush", "登録が完了しました。");
             em.close();
 
             //indexページへリダイレクト

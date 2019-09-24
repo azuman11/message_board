@@ -55,6 +55,8 @@ public class UpdateServlet extends HttpServlet {
         em.getTransaction().begin();
         //commit 登録
         em.getTransaction().commit();
+        //リダイレクト時に消えてしまうので、フラッシュメッセージをセッションスコープに保存し、index.jspを呼出時にセッションスコープ表示
+        request.getSession().setAttribute("flush", "更新が完了しました。");
         em.close();
 
         // セッションスコープ上の不要になったデータを削除
