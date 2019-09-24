@@ -2,8 +2,10 @@ package controllers;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -11,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import models.Message;
+import models.validators.MessageValidator;
 import utils.DBUtil;
 
 //create（挿入処理）の作成
@@ -56,18 +59,35 @@ public class CreateServlet extends HttpServlet {
             m.setCreated_at(currentTime);
             m.setUpdated_at(currentTime);
 
+            // バリデーションを実行
+            List<String> errors = MessageValidator.validate(m);
+            //新規登録のフォームに戻る
+            if(errors.size() > 0) {
+                em.close();
 
-            em.getTransaction().begin();
-            //persist = INSERT エンティティオブジェクトをDBに追加
-            em.persist(m);
-            //commit 登録
-            em.getTransaction().commit();
-            //リダイレクト時に消えてしまうので、フラッシュメッセージをセッションスコープに保存し、index.jspを呼出時にセッションスコープ表示
-            request.getSession().setAttribute("flush", "登録が完了しました。");
-            em.close();
+                // フォームに初期値を設定、さらにエラーメッセージを送る
+                request.setAttribute("_token", request.getSession().getId());
+                request.setAttribute("message", m);
+                request.setAttribute("errors", errors);
 
-            //indexページへリダイレクト
-            response.sendRedirect(request.getContextPath() + "/index");
+                RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/messages/new.jsp");
+                rd.forward(request, response);
+            //登録
+            } else {
+
+
+                em.getTransaction().begin();
+                //persist = INSERT エンティティオブジェクトをDBに追加
+                em.persist(m);
+                //commit 登録
+                em.getTransaction().commit();
+                //リダイレクト時に消えてしまうので、フラッシュメッセージをセッションスコープに保存し、index.jspを呼出時にセッションスコープ表示
+                request.getSession().setAttribute("flush", "登録が完了しました。");
+                em.close();
+
+                //indexページへリダイレクト
+                response.sendRedirect(request.getContextPath() + "/index");
+            }
         }
     }
 }
